@@ -10,13 +10,16 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import { KeyboardDatePicker } from '@material-ui/pickers';
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    padding: theme.spacing(2),
-    width: 900
+    padding: theme.spacing(2)
   },
   generateButton: {
+    marginTop: theme.spacing(1)
+  },
+  uploadAvatarButton: {
     marginTop: theme.spacing(1)
   },
   prefixCodeSelect: {
@@ -38,6 +41,12 @@ const prefixCodes = [
 const CreateUser = () => {
   const classes = useStyles();
   const [prefixCode, setPrefixCode] = React.useState('GCH');
+
+  const [selectedBirthday, setSelectedBirthday] = React.useState(new Date());
+
+  const _handleBirthdayChange = date => {
+    setSelectedBirthday(date);
+  };
 
   const _handleChangePrefixCode = event => {
     setPrefixCode(event.target.value);
@@ -65,15 +74,15 @@ const CreateUser = () => {
                 </TextField>
               </Grid>
 
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={7}>
                 <TextField required fullWidth label="User Code" />
               </Grid>
 
-              <Grid item xs={12} md={2}>
+              <Grid item xs={12} md={3}>
                 <Button
                   className={classes.generateButton}
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                 >
                   Generate
                 </Button>
@@ -115,7 +124,17 @@ const CreateUser = () => {
                 </RadioGroup>
               </Grid>
               <Grid item xs={12} md={6}>
-                  
+                <KeyboardDatePicker
+                  fullWidth
+                  format="dd/MM/yyyy"
+                  id="Birthday"
+                  label="Birthday"
+                  value={selectedBirthday}
+                  onChange={_handleBirthdayChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date'
+                  }}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
                 <input
@@ -128,12 +147,20 @@ const CreateUser = () => {
                 <label htmlFor="avatar">
                   <Button
                     variant="outlined"
+                    color="secondary"
                     component="span"
-                    className={classes.button}
+                    className={classes.uploadAvatarButton}
                   >
-                    Upload
+                    Upload Avatar
                   </Button>
                 </label>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button variant="outlined">Reset</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button variant="contained" color="primary">
+                  Create
+                </Button>
               </Grid>
             </Grid>
           </form>
