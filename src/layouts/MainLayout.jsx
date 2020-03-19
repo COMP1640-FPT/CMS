@@ -133,12 +133,17 @@ export default function MainLayout(props) {
         <Divider />
         <List>
           <ListItemLink to="/" primary="Dashboard" icon={<InboxIcon />} />
+          <Divider />
           <ListItemLink to="/users" primary="List Users" icon={<InboxIcon />} />
           <ListItemLink
             to="/users/create"
             primary="Create User"
             icon={<InboxIcon />}
           />
+          <Divider />
+          <ListItemLink to="/majors" primary="Manage Major" icon={<InboxIcon />} />
+          <ListItemLink to="/subjects" primary="Manage Subject" icon={<InboxIcon />} />
+
         </List>
       </Drawer>
       <main

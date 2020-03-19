@@ -6,9 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Radio from '@material-ui/core/Radio';
+import Typography from '@material-ui/core/Typography';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 
@@ -55,6 +55,11 @@ const CreateUser = () => {
   return (
     <Grid container type="flex" justify="center">
       <Grid container type="flex" justify="center" item xs={8}>
+        <Grid container type="flex" justify="center">
+          <Typography component="h2" variant="h3">
+            List Users
+          </Typography>
+        </Grid>
         <Paper className={classes.paper}>
           <form noValidate autoComplete="off">
             <Grid container spacing={4}>
