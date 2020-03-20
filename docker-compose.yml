@@ -12,8 +12,8 @@ services:
     environment:
       PORT: 3030
     networks:
-      - cms-www-net
+      - fbeta-networks
 networks: 
-  cms-www-net:
+  fbeta-networks:
     external: true
 # docker network create cms-www-net
