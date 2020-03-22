@@ -21,7 +21,7 @@ function App() {
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <MainLayout>
           <Switch>
-            <Route exact path="/" render={() => <h1>DASHBOARD</h1>} />
+            <Route exact path="/" render={() => <h1>Drone hello world</h1>} />
             <Route exact path="/users" component={ListUser} />
             <Route exact path="/users/create" component={CreateUser} />
             <Route exact path="/majors" component={ManageMajor} />
