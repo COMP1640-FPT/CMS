@@ -11,7 +11,7 @@ import ManageSubject from './pages/ManageSubject';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import ChangePassword from './pages/ChangePassword';
-import Chat from './components/Chat';
+import Chat from './components/Chat'; 
 
 function App() {
   return (
