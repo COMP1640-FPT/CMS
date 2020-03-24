@@ -12,6 +12,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 
+import agent from '../libs/agent';
+
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2)
@@ -41,6 +43,7 @@ const prefixCodes = [
 const CreateUser = () => {
   const classes = useStyles();
   const [prefixCode, setPrefixCode] = React.useState('GCH');
+  const [selectedRole, setSelectedRole] = React.useState(' ');
 
   const [selectedBirthday, setSelectedBirthday] = React.useState(new Date());
 
@@ -50,6 +53,18 @@ const CreateUser = () => {
 
   const _handleChangePrefixCode = event => {
     setPrefixCode(event.target.value);
+  };
+
+  const _handleChangeRole = async event => {
+    setSelectedRole(event.target.value);
+    try {
+      const result = await agent.post(
+        `/api/handleRequest/user/${event.target.value}`
+      );
+      console.log(result, 2421);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -63,7 +78,29 @@ const CreateUser = () => {
         <Paper className={classes.paper}>
           <form noValidate autoComplete="off">
             <Grid container spacing={4}>
-              <Grid item xs={12} md={2}>
+              <Grid item xs={12} md={3}>
+                <TextField
+                  className={classes.prefixCodeSelect}
+                  select
+                  fullWidth
+                  value={selectedRole}
+                  onChange={_handleChangeRole}
+                >
+                  <MenuItem disabled key={' '} value={' '}>
+                    Choose role
+                  </MenuItem>
+                  <MenuItem key={'student'} value={'student'}>
+                    Student
+                  </MenuItem>
+                  <MenuItem key={'tutor'} value={'tutor'}>
+                    Tutor
+                  </MenuItem>
+                  <MenuItem key={'manager'} value={'manager'}>
+                    Manager
+                  </MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={12} md={3}>
                 <TextField
                   className={classes.prefixCodeSelect}
                   select
@@ -79,10 +116,10 @@ const CreateUser = () => {
                 </TextField>
               </Grid>
 
-              <Grid item xs={12} md={7}>
+              <Grid item xs={12} md={6}>
                 <TextField required fullWidth label="User Code" />
               </Grid>
-
+              {/* 
               <Grid item xs={12} md={3}>
                 <Button
                   className={classes.generateButton}
@@ -91,7 +128,7 @@ const CreateUser = () => {
                 >
                   Generate
                 </Button>
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12} md={6}>
                 <TextField required fullWidth label="Firstname" />

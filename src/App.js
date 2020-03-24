@@ -11,27 +11,97 @@ import ManageSubject from './pages/ManageSubject';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import ChangePassword from './pages/ChangePassword';
-import Chat from './components/Chat';
+import Chat from './pages/Chat.jsx';
 
 function App() {
   return (
     <Router>
       <CssBaseline />
-      <Chat />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <MainLayout>
-          <Switch>
-            <Route exact path="/" render={() => <h1>DASHBOARD</h1>} />
-            <Route exact path="/users" component={ListUser} />
-            <Route exact path="/users/create" component={CreateUser} />
-            <Route exact path="/majors" component={ManageMajor} />
-            <Route exact path="/subjects" component={ManageSubject} />
-            <Route exact path="/profile" component={Profile} />
-            <Route exact path="/change-password" component={ChangePassword} />
-            <Route exact path="/logout" component={Login} />
-            <Route path="/" render={() => <h1>PAGE NOT FOUND</h1>} />
-          </Switch>
-        </MainLayout>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <MainLayout>
+                <h1>DASHBOARD</h1>
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/chat"
+            render={() => (
+              <MainLayout>
+                <Chat />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/users"
+            render={() => (
+              <MainLayout>
+                <ListUser />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/users/create"
+            render={() => (
+              <MainLayout>
+                <CreateUser />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/majors"
+            render={() => (
+              <MainLayout>
+                <ManageMajor />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/subjects"
+            render={() => (
+              <MainLayout>
+                <ManageSubject />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/profile"
+            render={() => (
+              <MainLayout>
+                <Profile />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/change-password"
+            render={() => (
+              <MainLayout>
+                <ChangePassword />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/login"
+            render={() => (
+              <MainLayout>
+                <Login />
+              </MainLayout>
+            )}
+          />
+          <Route path="/" render={() => <h1>PAGE NOT FOUND</h1>} />
+        </Switch>
       </MuiPickersUtilsProvider>
     </Router>
   );

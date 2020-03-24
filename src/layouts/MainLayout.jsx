@@ -165,6 +165,14 @@ export default function MainLayout(props) {
       >
         Change password
       </MenuItem>
+      <MenuItem
+        onClick={() => {
+          history.push('/login');
+          handleMenuClose();
+        }}
+      >
+        Logout
+      </MenuItem>
     </Menu>
   );
 
@@ -295,8 +303,6 @@ export default function MainLayout(props) {
             primary="Manage Subject"
             icon={<ImportContactsIcon />}
           />
-          <Divider />
-          <ListItemLink to="/logout" primary="Logout" icon={<LockIcon />} />
         </List>
       </Drawer>
       <main
