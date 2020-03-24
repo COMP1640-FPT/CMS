@@ -1,0 +1,79 @@
+
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: node:alpine
+  volumes:
+  - name: cache
+    path: /tmp/cache
+  commands:
+  - npm config set cache-folder .npm-cache
+  - npm install
+
+- name: Publish
+  image: plugins/docker
+  settings:
+    auto_tag: true
+    repo: tungduy/cms-etutor
+    dockerfile: Dockerfile
+    username: 
+      from_secret: docker_username
+    password: 
+      from_secret: docker_password
+
+- name: Run Images
+  image: appleboy/drone-ssh
+  settings:
+    host: drone.e-tutor.wtf
+    port: 22
+    command_timeout: 6m
+    username: fbeta
+    password:
+      from_secret: server_password
+    script:
+      - . ~/project/.script/deploy.sh
+  when:
+    branch:
+      - master
+    event:
+      - push
+    status:
+      - success
+
+- name: slack_build
+  image: plugins/slack
+  settings:
+    webhook:
+      from_secret: webhook_slack
+    channel: drone-notify
+    username: drone
+    icon_emoji: ':bowtie:'
+    link_names: true
+    template: >
+      {{#success build.status}}
+        Build {{build.number}} succeeded and deployed to Production! :)
+        Event: {{build.event}}
+        Branch: {{build.branch}}
+        Tag: {{build.tag}}
+        Git SHA: {{build.commit}}
+        Link: {{build.link}}
+      {{else}}
+        Build {{build.number}} failed and not deployed to Production :(
+        Event: {{build.event}}
+        Branch: {{build.branch}}
+        Tag: {{build.tag}}
+        Git SHA: {{build.commit}}
+        Link: {{build.link}}
+      {{/success}}
+  when:
+    status:
+      - success
+      - failure
+
+volumes:
+  - name: cache
+    host:
+      path: /var/lib/cache
