@@ -4,7 +4,17 @@ type: docker
 name: default
 
 steps:
-- name: build
+- name: Restore-cache
+  image: drillster/drone-volume-cache
+  restore: true
+  mount:
+  - ./.npm-cache
+  - ./node_modules
+  volumes:
+    - name: cache
+      path: /tmp/cache
+
+- name: Install package
   image: node:alpine
   volumes:
   - name: cache
@@ -43,7 +53,7 @@ steps:
     status:
       - success
 
-- name: slack_build
+- name: Slack send message
   image: plugins/slack
   settings:
     webhook:
@@ -72,6 +82,16 @@ steps:
     status:
       - success
       - failure
+- name: Rebuild-cache
+  image: drillster/drone-volume-cache
+  rebuild: true
+  mount:
+  - ./node_modules
+  - ./.npm-cache
+  # Mount the cache volume, needs "Trusted"
+  volumes:
+  - name: cache
+    path: /tmp/cache
 
 volumes:
   - name: cache
