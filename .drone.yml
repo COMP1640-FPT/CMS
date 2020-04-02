@@ -34,7 +34,7 @@ steps:
     password:
       from_secret: server_password
     script:
-      - . ~/project/.script/deploy.sh
+      - . ~/project/.script/deploy.sh tungduy/cms-etutor
   when:
     branch:
       - master
