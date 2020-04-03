@@ -8,6 +8,7 @@ steps:
   image: drillster/drone-volume-cache
   restore: true
   mount:
+  - /drone/docker
   - ./.npm-cache
   - ./node_modules
   volumes:
@@ -33,6 +34,8 @@ steps:
       from_secret: docker_username
     password: 
       from_secret: docker_password
+  storage_path: /drone/docker
+  use_cache: true
 - name: Copy files
   image: appleboy/drone-scp
   settings:
@@ -103,6 +106,7 @@ steps:
   image: drillster/drone-volume-cache
   rebuild: true
   mount:
+  - /drone/docker
   - ./node_modules
   - ./.npm-cache
   # Mount the cache volume, needs "Trusted"
