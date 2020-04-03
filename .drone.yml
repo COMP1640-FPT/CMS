@@ -33,6 +33,20 @@ steps:
       from_secret: docker_username
     password: 
       from_secret: docker_password
+- name: Copy files
+  image: appleboy/drone-scp
+  settings:
+    host: drone.e-tutor.wtf
+    port: 22
+    username: fbeta
+    password:
+      from_secret: server_password
+    target:  /home/e-tutor/${DRONE_REPO_NAME}
+    source:
+      - docker-compose.yml
+      - docker-compose.prod.yml
+  when:
+    branch: master
 
 - name: Run Images
   image: appleboy/drone-ssh
@@ -44,7 +58,10 @@ steps:
     password:
       from_secret: server_password
     script:
-      - . ~/project/.script/deploy.sh tungduy/cms-etutor
+      - cd /home/e-tutor/${DRONE_REPO_NAME} && \
+        docker-compose down && \
+        docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d                                                      
+      # - . ~/project/.script/deploy.sh tungduy/cms-etutor
   when:
     branch:
       - master
