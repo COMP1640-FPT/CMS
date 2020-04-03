@@ -34,8 +34,8 @@ steps:
       from_secret: docker_username
     password: 
       from_secret: docker_password
-  storage_path: /drone/docker
-  use_cache: true
+    storage_path: /drone/docker
+    use_cache: true
 - name: Copy files
   image: appleboy/drone-scp
   settings:
@@ -61,9 +61,9 @@ steps:
     password:
       from_secret: server_password
     script:
-      - cd /home/e-tutor/${DRONE_REPO_NAME} && \
-        docker-compose down && \
-        docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d                                                      
+      - cd /home/e-tutor/${DRONE_REPO_NAME}
+      - docker-compose down
+      - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d                                                      
       # - . ~/project/.script/deploy.sh tungduy/cms-etutor
   when:
     branch:
