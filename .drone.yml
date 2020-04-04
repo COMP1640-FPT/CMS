@@ -125,5 +125,5 @@ volumes:
     host:
       path: /var/lib/cache
   - name: dockersock
-      host:
-        path: /var/run/docker.sock
+    host:
+      path: /var/run/docker.sock
