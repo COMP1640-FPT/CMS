@@ -108,6 +108,7 @@ steps:
     status:
       - success
       - failure
+      
 - name: Rebuild-cache
   image: drillster/drone-volume-cache
   rebuild: true
