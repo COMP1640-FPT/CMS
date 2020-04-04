@@ -52,6 +52,7 @@ class UploadAvatar extends React.Component {
     const result = await axios({
       method: "post",
       url,
+      baseURL: '',
       data: formData,
       headers: { "Content-Type": "multipart/form-data" }
     });
