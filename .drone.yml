@@ -63,7 +63,7 @@ steps:
     script:
       - cd /home/e-tutor/${DRONE_REPO_NAME}
       - docker-compose down
-      - docker rmi -f ${DRONE_REPO}
+      - docker rmi -f tungduy/cms-etutor
       - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d                                                      
       # - . ~/project/.script/deploy.sh tungduy/cms-etutor
   when:
