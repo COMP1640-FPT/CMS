@@ -3,11 +3,13 @@ import { Typography, Table, Tag, Button, Input, Row, Col } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import agent from "../libs/agent";
-import CONSTANTS from '../constants'
+import CONSTANTS from "../constants";
+import { useHistory } from "react-router-dom";
 
 const { Title } = Typography;
 
 const ListUsers = () => {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -20,26 +22,26 @@ const ListUsers = () => {
     setSearchedColumn(dataIndex);
   };
 
-  const handleReset = clearFilters => {
+  const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
 
-  const getColumnSearchProps = dataIndex => ({
+  const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
       confirm,
-      clearFilters
+      clearFilters,
     }) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={node => {
+          ref={(node) => {
             searchInput.current = node;
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e =>
+          onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -63,20 +65,17 @@ const ListUsers = () => {
         </Button>
       </div>
     ),
-    filterIcon: filtered => (
+    filterIcon: (filtered) => (
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput && searchInput.current.select());
       }
     },
-    render: text => {
+    render: (text) => {
       return searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
@@ -87,7 +86,7 @@ const ListUsers = () => {
       ) : (
         text
       );
-    }
+    },
   });
 
   const columns = [
@@ -95,35 +94,37 @@ const ListUsers = () => {
       title: "Code",
       dataIndex: "code",
       key: "code",
-      render: code => <a>{code}</a>
+      render: (code, user) => {
+        return <a onClick={() => history.push("/users/" + user.id)}>{code}</a>;
+      },
     },
     {
       title: "Fullname",
       dataIndex: "fullname",
       key: "fullname",
-      ...getColumnSearchProps("fullname")
+      ...getColumnSearchProps("fullname"),
     },
     {
       title: "Email",
       dataIndex: "email",
-      key: "email"
+      key: "email",
     },
     {
       title: "Role",
       key: "role",
       dataIndex: "role",
-      render: tag => (
+      render: (tag) => (
         <span>
           <Tag color={CONSTANTS.ROLE_COLOR[tag.toUpperCase()]} key={tag}>
             {tag.toUpperCase()}
           </Tag>
         </span>
-      )
+      ),
     },
     {
       title: "Phone",
       dataIndex: "phone",
-      key: "phone"
+      key: "phone",
     },
     {
       title: "Action",
@@ -131,20 +132,21 @@ const ListUsers = () => {
       render: (text, record) => (
         <span>
           <a style={{ marginRight: 16 }}>Active</a>
-          <a>Delete</a>
+          {/* <a>Delete</a> */}
         </span>
-      )
-    }
+      ),
+    },
   ];
 
-  const _processUsers = users => {
-    return users.map(user => ({
+  const _processUsers = (users) => {
+    return users.map((user) => ({
       key: user.id,
+      id: user.id,
       code: user.code,
       fullname: user.name,
       email: user.email,
       role: user.role,
-      phone: user.phone
+      phone: user.phone,
     }));
   };
 
@@ -173,7 +175,11 @@ const ListUsers = () => {
           <Title level={2}>List Users</Title>
         </Col>
       </Row>
-      <Table loading={loading} columns={columns} dataSource={_processUsers(users)} />
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={_processUsers(users)}
+      />
     </div>
   );
 };

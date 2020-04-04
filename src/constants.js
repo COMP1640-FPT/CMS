@@ -1,8 +1,8 @@
 export default {
   CORE: {
-    PHP_SERVER: process.env.PHP_SERVER || 'http://localhost:8008/api',
-    NODE_SERVER: process.env.NODE_SERVER || 'http://localhost:8001/api',
-    AWS_S3: process.env.AWS_S3 || 'https://comp1640-s3.s3.amazonaws.com/'
+    PHP_SERVER: process.env.REACT_APP_PHP_SERVER || 'http://localhost:8008/api',
+    NODE_SERVER: process.env.REACT_APP_NODE_SERVER || 'http://localhost:8001/api',
+    AWS_S3: process.env.REACT_APP_AWS_S3 || 'https://comp1640-s3.s3.amazonaws.com/'
   },
   role: {
     ADMIN: 'admin',

@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import MainLayout from "./layouts/MainLayout";
 
-import 'antd/dist/antd.css'; 
+import "antd/dist/antd.css";
 import Dashboard from "./pages/Dashboard";
 import ListUsers from "./pages/ListUsers";
 import CreateUser from "./pages/CreateUser";
 import AssignUser from "./pages/AssignUser";
-
+import UserInfo from "./pages/UserInfo";
 
 function App() {
   return (
@@ -51,7 +51,8 @@ function App() {
             </MainLayout>
           )}
         />
-                <Route
+
+        <Route
           exact
           path="/users/assign"
           render={() => (
@@ -61,24 +62,16 @@ function App() {
           )}
         />
 
-        {/* <Route
+        <Route
           exact
-          path="/profile"
+          path="/users/:id"
           render={() => (
             <MainLayout>
-              <Profile />
+              <UserInfo />
             </MainLayout>
           )}
         />
-        <Route
-          exact
-          path="/change-password"
-          render={() => (
-            <MainLayout>
-              <ChangePassword />
-            </MainLayout>
-          )}
-        /> */}
+
         <Route
           exact
           path="/login"

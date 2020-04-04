@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Row,
@@ -9,7 +9,8 @@ import {
   InputNumber,
   Radio,
   DatePicker,
-  Button
+  Button,
+  notification,
 } from "antd";
 import UploadAvatar from "../components/UploadAvatar";
 import agent from "../libs/agent";
@@ -18,20 +19,44 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const layout = {
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 
 const CreateUser = () => {
   const [preCodeData, setPreCodeData] = useState([]);
   const [imageLink, setImageLink] = useState("");
   const [chooseRoleLoading, setChooseRoleLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
-  const onFinish = values => {
-    console.log(values);
+  const onFinish = async (values) => {
+    setLoading(true);
+    const data = {
+      ...values,
+      phone: "0" + values.phone,
+      birthday: values.birthday.format("YYYY-MM-DD"),
+      avatar: imageLink,
+    };
+
+    const result = await agent.post("/user", data);
+
+    if (result && result.data.success) {
+      onReset();
+      notification.success({
+        message: "Create user sucessfully!",
+      });
+    }
+
+    setLoading(false);
   };
 
-  const _handleChangeRole = role => {
+  const onReset = () => {
+    form.resetFields();
+    setPreCodeData([]);
+    setImageLink("");
+  };
+
+  const _handleChangeRole = (role) => {
     const fetchCode = async () => {
       setChooseRoleLoading(true);
       const result = await agent.get("/handleRequest/user/" + role);
@@ -39,7 +64,7 @@ const CreateUser = () => {
       if (result && result.data.success) {
         setPreCodeData(result.data.results.preCode);
         form.setFieldsValue({
-          code: result.data.results.code
+          code: result.data.results.code,
         });
       }
 
@@ -49,15 +74,21 @@ const CreateUser = () => {
     fetchCode();
   };
 
-  const _handleUploadSuccess = image => {
+  const _handleUploadSuccess = (image) => {
     setImageLink(image);
   };
 
-  console.log(imageLink);
-
   return (
     <div>
-      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+      <Form
+        {...layout}
+        form={form}
+        name="control-hooks"
+        onFinish={onFinish}
+        initialValues={{
+          gender: 0,
+        }}
+      >
         <Row type="flex" justify="center">
           <Col>
             <Title level={2}>Create User</Title>
@@ -86,8 +117,12 @@ const CreateUser = () => {
                       <Select placeholder="Choose code *">
                         {preCodeData &&
                           preCodeData.length &&
-                          preCodeData.map(code => {
-                            return <Option value={code}>{code}</Option>;
+                          preCodeData.map((code) => {
+                            return (
+                              <Option key={code} value={code}>
+                                {code}
+                              </Option>
+                            );
                           })}
                       </Select>
                     </Form.Item>
@@ -110,9 +145,9 @@ const CreateUser = () => {
             <Row gutter={[6, 6]}>
               <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                 <Form.Item
-                  name="firstname"
+                  name="firstName"
                   rules={[
-                    { required: true, message: "Please input first name!" }
+                    { required: true, message: "Please input first name!" },
                   ]}
                 >
                   <Input
@@ -124,9 +159,9 @@ const CreateUser = () => {
 
               <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                 <Form.Item
-                  name="lastname"
+                  name="lastName"
                   rules={[
-                    { required: true, message: "Please input last name!" }
+                    { required: true, message: "Please input last name!" },
                   ]}
                 >
                   <Input
@@ -165,50 +200,58 @@ const CreateUser = () => {
             </Row>
 
             <Row gutter={[6, 6]}>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <Form.Item
-                  name="state"
-                  rules={[{ required: true, message: "Please input state!" }]}
-                >
-                  <Input
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="State *"
-                  />
-                </Form.Item>
-              </Col>
-
               <Col xs={{ span: 24 }} lg={{ span: 6 }}>
                 <Form.Item
                   name="birthday"
                   rules={[
-                    { required: true, message: "Please input birthday!" }
+                    { required: true, message: "Please input birthday!" },
                   ]}
                 >
-                  <DatePicker style={{ width: "100%" }} />
+                  <DatePicker
+                    placeholder="Choose birthday *"
+                    style={{ width: "100%" }}
+                  />
+                  <br />
+                  <br />
+                  <UploadAvatar
+                    onSuccess={_handleUploadSuccess}
+                    imageUrl={imageLink}
+                  />
                 </Form.Item>
               </Col>
 
               <Col xs={{ span: 24 }} lg={{ span: 6 }}>
                 <Form.Item name="gender">
                   <Radio.Group>
-                    <Radio value="male">Male</Radio>
-                    <Radio value="female">Female</Radio>
+                    <Radio value={0}>Male</Radio>
+                    <Radio value={1}>Female</Radio>
                   </Radio.Group>
+                </Form.Item>
+              </Col>
+
+              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+                <Form.Item
+                  name="state"
+                  rules={[{ required: true, message: "Please input state!" }]}
+                >
+                  <Input.TextArea placeholder="Address" rows={8} />
                 </Form.Item>
               </Col>
             </Row>
 
             <Row gutter={[6, 6]}>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <UploadAvatar onSuccess={_handleUploadSuccess} />
-              </Col>
+              <Col xs={{ span: 24 }} lg={{ span: 12 }}></Col>
             </Row>
 
             <Row type="flex" justify="center">
               <Col>
-                <Button type="secondary">Reset</Button>
+                <Button type="secondary" onClick={onReset}>
+                  Reset
+                </Button>
                 &nbsp;
-                <Button type="primary">Create</Button>
+                <Button type="primary" htmlType="submit" loading={loading}>
+                  Create
+                </Button>
               </Col>
             </Row>
           </Col>
