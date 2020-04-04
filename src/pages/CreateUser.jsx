@@ -10,7 +10,7 @@ import {
   Radio,
   DatePicker,
   Button,
-  notification
+  notification,
 } from "antd";
 import UploadAvatar from "../components/UploadAvatar";
 import agent from "../libs/agent";
@@ -41,10 +41,10 @@ const CreateUser = () => {
     const result = await agent.post("/user", data);
 
     if (result && result.data.success) {
-      onReset()
+      onReset();
       notification.success({
-        message: 'Create user sucessfully!'
-      })
+        message: "Create user sucessfully!",
+      });
     }
 
     setLoading(false);
@@ -53,7 +53,7 @@ const CreateUser = () => {
   const onReset = () => {
     form.resetFields();
     setPreCodeData([]);
-    setImageLink("")
+    setImageLink("");
   };
 
   const _handleChangeRole = (role) => {
@@ -200,18 +200,6 @@ const CreateUser = () => {
             </Row>
 
             <Row gutter={[6, 6]}>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <Form.Item
-                  name="state"
-                  rules={[{ required: true, message: "Please input state!" }]}
-                >
-                  <Input
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="State *"
-                  />
-                </Form.Item>
-              </Col>
-
               <Col xs={{ span: 24 }} lg={{ span: 6 }}>
                 <Form.Item
                   name="birthday"
@@ -222,6 +210,12 @@ const CreateUser = () => {
                   <DatePicker
                     placeholder="Choose birthday *"
                     style={{ width: "100%" }}
+                  />
+                  <br />
+                  <br />
+                  <UploadAvatar
+                    onSuccess={_handleUploadSuccess}
+                    imageUrl={imageLink}
                   />
                 </Form.Item>
               </Col>
@@ -234,17 +228,19 @@ const CreateUser = () => {
                   </Radio.Group>
                 </Form.Item>
               </Col>
-            </Row>
 
-            <Row gutter={[6, 6]}>
               <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <Form.Item name="address" rules={[]}>
+                <Form.Item
+                  name="state"
+                  rules={[{ required: true, message: "Please input state!" }]}
+                >
                   <Input.TextArea placeholder="Address" rows={8} />
                 </Form.Item>
               </Col>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <UploadAvatar onSuccess={_handleUploadSuccess} imageUrl={imageLink} />
-              </Col>
+            </Row>
+
+            <Row gutter={[6, 6]}>
+              <Col xs={{ span: 24 }} lg={{ span: 12 }}></Col>
             </Row>
 
             <Row type="flex" justify="center">

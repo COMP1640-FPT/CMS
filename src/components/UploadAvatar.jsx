@@ -45,6 +45,7 @@ class UploadAvatar extends React.Component {
     this.setState({ loading: true });
 
     const url = CONSTANTS.CORE.NODE_SERVER + "/users/upload-avatar";
+    console.log("url", url);
     const formData = new FormData();
     formData.append("hello", "hello");
     formData.append("avatar", request.file);
@@ -52,7 +53,7 @@ class UploadAvatar extends React.Component {
     const result = await axios({
       method: "post",
       url,
-      baseURL: '',
+      baseURL: '/',
       data: formData,
       headers: { "Content-Type": "multipart/form-data" }
     });
