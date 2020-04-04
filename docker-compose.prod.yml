@@ -1,0 +1,6 @@
+version: '3'
+services:
+  cms-etutor:
+    image: tungduy/cms-etutor
+    environment:
+      NODE_ENV: production

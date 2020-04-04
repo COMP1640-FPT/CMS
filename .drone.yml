@@ -4,7 +4,18 @@ type: docker
 name: default
 
 steps:
-- name: build
+- name: Restore-cache
+  image: drillster/drone-volume-cache
+  restore: true
+  mount:
+  - /drone/docker
+  - ./.npm-cache
+  - ./node_modules
+  volumes:
+    - name: cache
+      path: /tmp/cache
+
+- name: Install package
   image: node:alpine
   volumes:
   - name: cache
@@ -23,6 +34,21 @@ steps:
       from_secret: docker_username
     password: 
       from_secret: docker_password
+    use_cache: true
+- name: Copy files
+  image: appleboy/drone-scp
+  settings:
+    host: drone.e-tutor.wtf
+    port: 22
+    username: fbeta
+    password:
+      from_secret: server_password
+    target:  /home/e-tutor/${DRONE_REPO_NAME}
+    source:
+      - docker-compose.yml
+      - docker-compose.prod.yml
+  when:
+    branch: master
 
 - name: Run Images
   image: appleboy/drone-ssh
@@ -34,7 +60,10 @@ steps:
     password:
       from_secret: server_password
     script:
-      - . ~/project/.script/deploy.sh
+      - cd /home/e-tutor/${DRONE_REPO_NAME}
+      - docker-compose down
+      - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d                                                      
+      # - . ~/project/.script/deploy.sh tungduy/cms-etutor
   when:
     branch:
       - master
@@ -43,7 +72,7 @@ steps:
     status:
       - success
 
-- name: slack_build
+- name: Slack send message
   image: plugins/slack
   settings:
     webhook:
@@ -72,6 +101,17 @@ steps:
     status:
       - success
       - failure
+- name: Rebuild-cache
+  image: drillster/drone-volume-cache
+  rebuild: true
+  mount:
+  - /drone/docker
+  - ./node_modules
+  - ./.npm-cache
+  # Mount the cache volume, needs "Trusted"
+  volumes:
+  - name: cache
+    path: /tmp/cache
 
 volumes:
   - name: cache
