@@ -30,11 +30,16 @@ steps:
     auto_tag: true
     repo: tungduy/cms-etutor
     dockerfile: Dockerfile
+    daemon_off: true
+    purge: false
     username: 
       from_secret: docker_username
     password: 
       from_secret: docker_password
     use_cache: true
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
 
 - name: Transfer-compose
   image: appleboy/drone-scp
@@ -119,3 +124,6 @@ volumes:
   - name: cache
     host:
       path: /var/lib/cache
+  - name: dockersock
+      host:
+        path: /var/run/docker.sock
