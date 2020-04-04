@@ -35,7 +35,7 @@ steps:
     password: 
       from_secret: docker_password
     use_cache: true
-    
+
 - name: Transfer-compose
   image: appleboy/drone-scp
   settings:
@@ -63,6 +63,7 @@ steps:
     script:
       - cd /home/e-tutor/${DRONE_REPO_NAME}
       - docker-compose down
+      - docker rmi -f ${DRONE_REPO}
       - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d                                                      
       # - . ~/project/.script/deploy.sh tungduy/cms-etutor
   when:
