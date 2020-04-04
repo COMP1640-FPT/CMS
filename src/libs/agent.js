@@ -1,8 +1,9 @@
 import axios from 'axios'
+import CONSTANTS from '../constants'
 // import store from 'store'
 
 const instance = axios.create({
-  baseURL: process.env.PHP_SERVER || 'http://localhost:8008'
+  baseURL: CONSTANTS.CORE.PHP_SERVER
 });
 
 instance.interceptors.request.use(function (config) {
