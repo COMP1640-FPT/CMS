@@ -35,7 +35,8 @@ steps:
     password: 
       from_secret: docker_password
     use_cache: true
-- name: Copy files
+    
+- name: Transfer-compose
   image: appleboy/drone-scp
   settings:
     host: drone.e-tutor.wtf
