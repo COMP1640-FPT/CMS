@@ -10,6 +10,7 @@ import {
   Radio,
   DatePicker,
   Button,
+  notification
 } from "antd";
 import UploadAvatar from "../components/UploadAvatar";
 import agent from "../libs/agent";
@@ -40,7 +41,10 @@ const CreateUser = () => {
     const result = await agent.post("/user", data);
 
     if (result && result.data.success) {
-      console.log(result);
+      onReset()
+      notification.success({
+        message: 'Create user sucessfully!'
+      })
     }
 
     setLoading(false);

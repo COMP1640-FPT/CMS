@@ -131,7 +131,7 @@ const ListUsers = () => {
       render: (text, record) => (
         <span>
           <a style={{ marginRight: 16 }}>Active</a>
-          <a>Delete</a>
+          {/* <a>Delete</a> */}
         </span>
       )
     }
