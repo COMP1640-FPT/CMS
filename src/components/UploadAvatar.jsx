@@ -19,7 +19,7 @@ function beforeUpload(file) {
 class UploadAvatar extends React.Component {
   state = {
     loading: false,
-    imageUrl: ""
+    imageUrl: this.props.imageUrl
   };
 
   //   handleChange = info => {
@@ -59,7 +59,7 @@ class UploadAvatar extends React.Component {
     if (result && result.data.success) {
       this.setState({
         loading: false,
-        imageUrl: result.data.results.imageUrl
+        // imageUrl: result.data.results.imageUrl
       });
       this.props.onSuccess(result.data.results.imageUrl)
     }
@@ -72,7 +72,7 @@ class UploadAvatar extends React.Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-    const { imageUrl } = this.state;
+    // const { imageUrl } = this.state;
     return (
       <Upload
         name="avatar"
@@ -82,8 +82,8 @@ class UploadAvatar extends React.Component {
         customRequest={this._customRequest}
         beforeUpload={beforeUpload}
       >
-        {imageUrl ? (
-          <img src={CONSTANTS.CORE.AWS_S3 + imageUrl} alt="avatar" style={{ width: "100%" }} />
+        {this.props.imageUrl ? (
+          <img src={CONSTANTS.CORE.AWS_S3 + this.props.imageUrl} alt="avatar" style={{ width: "100%" }} />
         ) : (
           uploadButton
         )}

@@ -4,6 +4,6 @@ services:
     image: tungduy/cms-etutor
     environment:
       NODE_ENV: production
-      PHP_SERVER: ${PHP_SERVER}
-      NODE_SERVER: ${NODE_SERVER}
-      AWS_S3: ${AWS_S3}
+      REACT_APP_PHP_SERVER: ${PHP_SERVER}
+      REACT_APP_NODE_SERVER: ${NODE_SERVER}
+      REACT_APP_AWS_S3: ${AWS_S3}
