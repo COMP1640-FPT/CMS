@@ -4,37 +4,21 @@ type: docker
 name: default
 
 steps:
-- name: Restore-cache
-  image: drillster/drone-volume-cache
-  restore: true
-  mount:
-  - /drone/docker
-  - ./.npm-cache
-  - ./node_modules
-  volumes:
-    - name: cache
-      path: /tmp/cache
-
-- name: Install package
-  image: node:alpine
-  volumes:
-  - name: cache
-    path: /tmp/cache
-  commands:
-  - npm config set cache-folder .npm-cache
-  - npm install
-
-- name: Publish
+- name: Build and Publish
   image: plugins/docker
   settings:
-    auto_tag: true
     repo: tungduy/cms-etutor
     dockerfile: Dockerfile
+    daemon_off: true
+    purge: false
     username: 
       from_secret: docker_username
     password: 
       from_secret: docker_password
     use_cache: true
+  volumes:
+  - name: dockerSock
+    path: /var/run/docker.sock
 
 - name: Transfer-compose
   image: appleboy/drone-scp
@@ -103,19 +87,8 @@ steps:
     status:
       - success
       - failure
-- name: Rebuild-cache
-  image: drillster/drone-volume-cache
-  rebuild: true
-  mount:
-  - /drone/docker
-  - ./node_modules
-  - ./.npm-cache
-  # Mount the cache volume, needs "Trusted"
-  volumes:
-  - name: cache
-    path: /tmp/cache
-
+      
 volumes:
-  - name: cache
+  - name: dockerSock
     host:
-      path: /var/lib/cache
+      path: /var/run/docker.sock
