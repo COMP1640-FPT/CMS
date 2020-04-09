@@ -1,8 +1,8 @@
 export default {
   CORE: {
-    PHP_SERVER: process.env.REACT_APP_PHP_SERVER || 'http://localhost:8008/api',
+    PHP_SERVER: process.env.REACT_APP_PHP_SERVER || 'http://localhost:8008/api/auth',
     NODE_SERVER: process.env.REACT_APP_NODE_SERVER || 'http://localhost:8001/api',
-    AWS_S3: process.env.REACT_APP_AWS_S3 || 'https://comp1640-s3.s3.amazonaws.com/'
+    AWS_S3: process.env.REACT_APP_AWS_S3 || 'https://codingame.s3-ap-southeast-1.amazonaws.com'
   },
   role: {
     ADMIN: 'admin',

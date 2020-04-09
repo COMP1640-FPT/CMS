@@ -85,7 +85,7 @@ class UploadAvatar extends React.Component {
         beforeUpload={beforeUpload}
       >
         {this.props.imageUrl ? (
-          <img src={CONSTANTS.CORE.AWS_S3 + this.props.imageUrl} alt="avatar" style={{ width: "100%" }} />
+          <img src={CONSTANTS.CORE.AWS_S3 + '/' + this.props.imageUrl} alt="avatar" style={{ width: "100%" }} />
         ) : (
           uploadButton
         )}

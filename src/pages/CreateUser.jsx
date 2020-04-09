@@ -211,13 +211,12 @@ const CreateUser = () => {
                     placeholder="Choose birthday *"
                     style={{ width: "100%" }}
                   />
-                  <br />
-                  <br />
-                  <UploadAvatar
-                    onSuccess={_handleUploadSuccess}
-                    imageUrl={imageLink}
-                  />
                 </Form.Item>
+                <br />
+                <UploadAvatar
+                  onSuccess={_handleUploadSuccess}
+                  imageUrl={imageLink}
+                />
               </Col>
 
               <Col xs={{ span: 24 }} lg={{ span: 6 }}>
@@ -231,8 +230,8 @@ const CreateUser = () => {
 
               <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                 <Form.Item
-                  name="state"
-                  rules={[{ required: true, message: "Please input state!" }]}
+                  name="address"
+                  rules={[{ required: true, message: "Please input address!" }]}
                 >
                   <Input.TextArea placeholder="Address" rows={8} />
                 </Form.Item>
