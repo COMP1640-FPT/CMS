@@ -36,7 +36,7 @@ const CustomTableTranfer = ({ leftColumns, rightColumns, ...restProps }) => (
           rowSelection={rowSelection}
           columns={columns}
           dataSource={filteredItems}
-          size="large"
+          size="small"
           style={{ pointerEvents: listDisabled ? "none" : null }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {

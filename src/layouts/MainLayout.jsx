@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Divider } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
   VideoCameraOutlined,
   UserAddOutlined,
-  DashboardOutlined
+  DashboardOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
+import store from 'store'
+import Store from "../context";
 
 const { Header, Sider, Content } = Layout;
 
 const MainLayout = ({ children }) => {
+  const data = useContext(Store)
   const [collapsed, setCollapsed] = useState(false);
 
   const toggle = () => {
-    setCollapsed(collapsed => !collapsed);
+    setCollapsed((collapsed) => !collapsed);
   };
+
+  const _handleLogout = () => {
+    store.remove('token')
+    data.setAuth(null)
+  }
 
   return (
     <Layout id="components-layout-demo-custom-trigger">
@@ -51,6 +60,13 @@ const MainLayout = ({ children }) => {
               <span>Assign Tutor</span>
             </Link>
           </Menu.Item>
+          <Divider />
+          <Menu.Item key="99" onClick={() => {
+            _handleLogout()
+          }}>
+            <LockOutlined />
+            <span>Logout</span>
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -59,7 +75,7 @@ const MainLayout = ({ children }) => {
             collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
             {
               className: "trigger",
-              onClick: toggle
+              onClick: toggle,
             }
           )}
         </Header>
@@ -68,7 +84,7 @@ const MainLayout = ({ children }) => {
           style={{
             margin: "24px 16px",
             padding: 24,
-            minHeight: "100vh"
+            minHeight: "calc(100vh - 112px)",
           }}
         >
           {children}

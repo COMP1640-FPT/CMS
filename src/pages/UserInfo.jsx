@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Row, Col, Input, Form, Radio } from "antd";
+import { Typography, Row, Col, Input, Form, Radio, Spin } from "antd";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import agent from "../libs/agent";
+import userPlaceHolder from "../assets/user-placeholder.png";
+import CONSTANTS from '../constants'
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const layout = {
-  labelCol: { span: 2 },
-  wrapperCol: { span: 22 },
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
 };
 
 const UserInfo = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
-
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -24,8 +26,7 @@ const UserInfo = () => {
 
       const result = await agent.get(`/user/${id}/edit`);
       if (result && result.data.success) {
-        console.log(result);
-        form.setFieldsValue({
+        setData({
           ...result.data.results,
           birthday: format(
             new Date(result.data.results.birthday),
@@ -41,99 +42,78 @@ const UserInfo = () => {
   }, [id]);
 
   return (
-    <div>
-      <Form form={form} {...layout}>
+    <Spin spinning={loading}>
+      <Form form={form} {...layout} labelAlign="left">
         <Row type="flex" justify="center">
           <Col>
             <Title level={2}>User Info</Title>
           </Col>
         </Row>
-        <Row>
-          <Col xs={{ span: 24, offset: 0 }} lg={{ span: 18, offset: 4 }}>
+        <Row gutter={[12, 12]}>
+          <Col
+            xs={{ span: 24, offset: 0, order: 0 }}
+            lg={{ span: 10, offset: 0, order: 1 }}
+            style={{ 
+              maxHeight: '600px'
+             }}
+          >
+            <img src={data && data.avatar ? CONSTANTS.CORE.AWS_S3 + '/' + data.avatar : userPlaceHolder} style={{width: '100%', height: '100%'}} alt="" />
+          </Col>
+          <Col xs={{ span: 24, offset: 0 }} lg={{ span: 14, offset: 0 }}>
             <Row gutter={[6, 6]}>
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="role" label="Role">
-                  <Input
-                    readOnly
-                    disabled
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                  />
+                <Form.Item label={"Role"}>
+                  <Text strong>{data && data.role}</Text>
                 </Form.Item>
               </Col>
 
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="code" label="Code">
-                  <Input
-                    readOnly
-                    disabled
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                  />
+                <Form.Item label="Code">
+                  <Text strong>{data && data.code}</Text>
                 </Form.Item>
               </Col>
             </Row>
 
             <Row gutter={[6, 6]}>
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="name" label="Fullname">
-                  <Input
-                    readOnly
-                    disabled
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                  />
+                <Form.Item label="Fullname">
+                  <Text strong>{data && data.name}</Text>
                 </Form.Item>
               </Col>
             </Row>
 
             <Row gutter={[6, 6]}>
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="phone" label="Phone">
-                  <Input
-                    readOnly
-                    disabled
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                  />
+                <Form.Item label="Phone">
+                  <Text strong>{data && data.phone}</Text>
                 </Form.Item>
               </Col>
 
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="country" label="Country">
-                  <Input
-                    readOnly
-                    disabled
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                  />
+                <Form.Item label="Country">
+                  <Text strong>{data && data.country}</Text>
                 </Form.Item>
               </Col>
             </Row>
 
             <Row gutter={[6, 6]}>
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="email" label="Email">
-                  <Input
-                    readOnly
-                    disabled
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                  />
+                <Form.Item label="Email">
+                  <Text strong>{data && data.email}</Text>
                 </Form.Item>
               </Col>
 
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="birthday" label="Birthday">
-                  <Input
-                    placeholder="Address"
-                    readOnly
-                    disabled
-                    // prefix={<UserOutlined className="site-form-item-icon" />}
-                  />
+                <Form.Item label="Birthday">
+                  <Text strong>{data && data.birthday}</Text>
                 </Form.Item>
               </Col>
 
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Form.Item name="gender" label="Gender">
-                  <Radio.Group>
-                    <Radio value={0}>Male</Radio>
-                    <Radio value={1}>Female</Radio>
-                  </Radio.Group>
+                <Form.Item label="Gender">
+                  <Text strong>
+                    {data && (data.gender === 0 || data.gender === 1) ? (data.gender === 0 ? "Male" : "Female") : null}
+                  </Text>
                 </Form.Item>
               </Col>
             </Row>
@@ -141,14 +121,14 @@ const UserInfo = () => {
             <Row gutter={[6, 6]}>
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
                 <Form.Item label="Address">
-                  <Input.TextArea readOnly disabled rows={8} />
+                  <Text strong>{data && data.address}</Text>
                 </Form.Item>
               </Col>
             </Row>
           </Col>
         </Row>
       </Form>
-    </div>
+    </Spin>
   );
 };
 

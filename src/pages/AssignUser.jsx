@@ -14,34 +14,33 @@ for (let i = 0; i < 20; i++) {
     title: `content${i + 1}`,
     description: `description of content${i + 1}`,
     disabled: i % 4 === 0,
-    tag: mockTags[i % 3]
+    tag: mockTags[i % 3],
   });
 }
 
 const originTargetKeys = mockData
-  .filter(item => +item.key % 3 > 1)
-  .map(item => item.key);
+  .filter((item) => +item.key % 3 > 1)
+  .map((item) => item.key);
 
 const leftTableColumns = [
   {
     dataIndex: "title",
-    title: "Name"
-  },
-  {
-    dataIndex: "tag",
-    title: "Tag",
-    render: tag => <Tag>{tag}</Tag>
+    title: "Name",
   },
   {
     dataIndex: "description",
-    title: "Description"
-  }
+    title: "Description",
+  },
 ];
 const rightTableColumns = [
   {
     dataIndex: "title",
-    title: "Name"
-  }
+    title: "Name",
+  },
+  {
+    dataIndex: "description",
+    title: "Description",
+  },
 ];
 
 const AssignUser = () => {
@@ -62,12 +61,13 @@ const AssignUser = () => {
     console.log("search:", val);
   }
 
-  const onChangeTranfer = nextTargetKeys => {
-    this.setState({ targetKeys: nextTargetKeys });
+  const onChangeTranfer = (nextTargetKeys) => {
+    console.log(nextTargetKeys);
+    setTargetKeys(nextTargetKeys);
   };
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ overflowX: "auto" }}>
       <Row type="flex" justify="center">
         <Col>
           <Title level={2}>Assign Tutor</Title>
@@ -105,8 +105,7 @@ const AssignUser = () => {
             showSearch={true}
             onChange={onChangeTranfer}
             filterOption={(inputValue, item) =>
-              item.title.indexOf(inputValue) !== -1 ||
-              item.tag.indexOf(inputValue) !== -1
+              item.title.indexOf(inputValue) !== -1
             }
             leftColumns={leftTableColumns}
             rightColumns={rightTableColumns}

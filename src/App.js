@@ -16,6 +16,12 @@ import store from "store";
 function App() {
   const [data, setData] = useState({
     auth: null,
+    setAuth: (auth) => {
+      setData({
+        ...data,
+        auth,
+      });
+    }
   });
 
   const _handleLoginSuccess = (auth) => {
@@ -29,7 +35,7 @@ function App() {
 
   useEffect(() => {
     return () => {
-      alert("hello")
+      // alert("hello")
     };
   }, []);
 
