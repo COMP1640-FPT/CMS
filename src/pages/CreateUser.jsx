@@ -113,7 +113,7 @@ const CreateUser = () => {
               {preCodeData && preCodeData.length ? (
                 <>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }}>
-                    <Form.Item name="precode" rules={[{ required: true }]}>
+                    <Form.Item name="preCode" rules={[{ required: true }]}>
                       <Select placeholder="Choose code *">
                         {preCodeData &&
                           preCodeData.length &&
