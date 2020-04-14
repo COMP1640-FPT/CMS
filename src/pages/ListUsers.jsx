@@ -27,6 +27,27 @@ const ListUsers = () => {
     setSearchText("");
   };
 
+  const _handleChangeStatus = async (id) => {
+    setLoading(true)
+    const result = await agent.get("/change_status/" + id);
+
+    if (result && result.data.success) {
+      const newUsers = users.map((user) => {
+        if (user.id === id) {
+          return {
+            ...user,
+            status: result.data.results,
+          };
+        }
+        return user
+      });
+
+      setUsers(newUsers);
+    }
+
+    setLoading(false)
+  };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -131,7 +152,12 @@ const ListUsers = () => {
       key: "action",
       render: (text, record) => (
         <span>
-          <a style={{ marginRight: 16 }}>Active</a>
+          <a
+            style={{ marginRight: 16 }}
+            onClick={() => _handleChangeStatus(record.id)}
+          >
+            {record.status}
+          </a>
           {/* <a>Delete</a> */}
         </span>
       ),
@@ -147,6 +173,7 @@ const ListUsers = () => {
       email: user.email,
       role: user.role,
       phone: user.phone,
+      status: user.status,
     }));
   };
 

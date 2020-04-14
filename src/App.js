@@ -12,6 +12,7 @@ import UserInfo from "./pages/UserInfo";
 import Login from "./pages/Login";
 import Store from "./context";
 import store from "store";
+import Request from "./pages/Request";
 
 function App() {
   const [data, setData] = useState({
@@ -21,7 +22,7 @@ function App() {
         ...data,
         auth,
       });
-    }
+    },
   });
 
   const _handleLoginSuccess = (auth) => {
@@ -39,7 +40,7 @@ function App() {
     };
   }, []);
 
-  if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
+  // if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
 
   return (
     <Store.Provider value={data}>
@@ -89,6 +90,16 @@ function App() {
             render={() => (
               <MainLayout>
                 <AssignUser />
+              </MainLayout>
+            )}
+          />
+
+          <Route
+            exact
+            path="/request"
+            render={() => (
+              <MainLayout bg="transparent">
+                <Request />
               </MainLayout>
             )}
           />

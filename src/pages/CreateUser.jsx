@@ -59,7 +59,7 @@ const CreateUser = () => {
   const _handleChangeRole = (role) => {
     const fetchCode = async () => {
       setChooseRoleLoading(true);
-      const result = await agent.get("/handleRequest/user/" + role);
+      const result = await agent.get("/handleRequest/code/" + role);
 
       if (result && result.data.success) {
         setPreCodeData(result.data.results.preCode);

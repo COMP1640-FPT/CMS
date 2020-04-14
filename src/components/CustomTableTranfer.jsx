@@ -2,7 +2,7 @@ import React from "react";
 import { difference } from "lodash";
 import { Transfer, Table } from "antd";
 
-const CustomTableTranfer = ({ leftColumns, rightColumns, ...restProps }) => (
+const CustomTableTranfer = ({ leftColumns, rightColumns, loadingTable, ...restProps }) => (
   <Transfer {...restProps} showSelectAll={false}>
     {({
       direction,
@@ -33,6 +33,7 @@ const CustomTableTranfer = ({ leftColumns, rightColumns, ...restProps }) => (
 
       return (
         <Table
+          loading={loadingTable}
           rowSelection={rowSelection}
           columns={columns}
           dataSource={filteredItems}
