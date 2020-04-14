@@ -40,8 +40,9 @@ const rightTableColumns = [
 
 const AssignUser = () => {
   const [loading, setLoading] = useState(false);
+  const [assignLoading, setAssignLoading] = useState(false);
   const [loadingTable, setLoadingTable] = useState(false);
-  const [currentTutor, setCurrentTutor] = useState([]);
+  const [currentTutor, setCurrentTutor] = useState(null);
   const [assignedStudents, setAssignedStudents] = useState([]);
   const [unassignedStudents, setUnassignedStudents] = useState([]);
   const [tutors, setTutors] = useState([]);
@@ -58,6 +59,7 @@ const AssignUser = () => {
   };
 
   const _handlAssign = async () => {
+    setAssignLoading(true)
     const result = await agent.post("/assign/", {
       tutor: currentTutor,
       student: assignedStudents,
@@ -67,6 +69,7 @@ const AssignUser = () => {
         message: "Assgin students sucessfully!",
       });
     }
+    setAssignLoading(false)
   };
 
   function onBlur() {
@@ -175,7 +178,7 @@ const AssignUser = () => {
         </Col>
 
         <Col align="center" xs={{ span: 24, offset: 0 }}>
-          <Button type="primary" onClick={_handlAssign}>
+          <Button disabled={!currentTutor} loading={assignLoading} type="primary" onClick={_handlAssign}>
             Assign
           </Button>
         </Col>
