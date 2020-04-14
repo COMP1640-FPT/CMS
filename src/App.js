@@ -40,7 +40,7 @@ function App() {
     };
   }, []);
 
-  // if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
+  if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
 
   return (
     <Store.Provider value={data}>
