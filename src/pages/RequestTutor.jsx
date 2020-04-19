@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import isImage from "is-image";
 import io from "socket.io-client";
 import {
@@ -26,6 +26,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { animateScroll as scroll } from "react-scroll";
+import Store from "../context";
+import { useHistory } from "react-router-dom";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -48,6 +50,11 @@ const layout = {
 };
 
 const RequestTutor = () => {
+  const data = useContext(Store)
+  const history = useHistory();
+  if(!data.user || !["tutor"].includes(data.user.role)) {
+    history.push("/")
+  }
   const [socket, setSocket] = useState(null);
   const [me, setMe] = useState(null);
   const [messages, setMessages] = useState([]);

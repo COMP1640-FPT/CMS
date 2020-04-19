@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Select,
   Row,
@@ -13,6 +13,8 @@ import CustomTableTranfer from "../components/CustomTableTranfer";
 import { useEffect } from "react";
 import agent from "../libs/agent";
 import { isObject } from 'lodash'
+import { useHistory } from "react-router-dom";
+import Store from "../context";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -40,6 +42,11 @@ const rightTableColumns = [
 ];
 
 const AssignUser = () => {
+  const data = useContext(Store)
+  const history = useHistory();
+  if(!data.user || !["admin", "staff"].includes(data.user.role)) {
+    history.push("/")
+  }
   const [loading, setLoading] = useState(false);
   const [assignLoading, setAssignLoading] = useState(false);
   const [loadingTable, setLoadingTable] = useState(false);

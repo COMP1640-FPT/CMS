@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Typography, Row, Col, Input, Form, Radio, Spin } from "antd";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { format } from "date-fns";
 import agent from "../libs/agent";
 import userPlaceHolder from "../assets/user-placeholder.png";
-import CONSTANTS from '../constants'
+import CONSTANTS from "../constants";
+import Store from "../context";
 
 const { Title, Text } = Typography;
 
@@ -14,6 +15,11 @@ const layout = {
 };
 
 const UserInfo = () => {
+  const dataContext = useContext(Store);
+  const history = useHistory();
+  if (!data.user || !["admin", "staff"].includes(data.user.role)) {
+    history.push("/");
+  }
   const { id } = useParams();
   const [form] = Form.useForm();
   const [data, setData] = useState(null);
@@ -53,11 +59,19 @@ const UserInfo = () => {
           <Col
             xs={{ span: 24, offset: 0, order: 0 }}
             lg={{ span: 10, offset: 0, order: 1 }}
-            style={{ 
-              maxHeight: '600px'
-             }}
+            style={{
+              maxHeight: "600px",
+            }}
           >
-            <img src={data && data.avatar ? CONSTANTS.CORE.AWS_S3 + '/' + data.avatar : userPlaceHolder} style={{width: '100%', height: '100%'}} alt="" />
+            <img
+              src={
+                data && data.avatar
+                  ? CONSTANTS.CORE.AWS_S3 + "/" + data.avatar
+                  : userPlaceHolder
+              }
+              style={{ width: "100%", height: "100%" }}
+              alt=""
+            />
           </Col>
           <Col xs={{ span: 24, offset: 0 }} lg={{ span: 14, offset: 0 }}>
             <Row gutter={[6, 6]}>
@@ -112,7 +126,11 @@ const UserInfo = () => {
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
                 <Form.Item label="Gender">
                   <Text strong>
-                    {data && (data.gender === 0 || data.gender === 1) ? (data.gender === 0 ? "Male" : "Female") : null}
+                    {data && (data.gender === 0 || data.gender === 1)
+                      ? data.gender === 0
+                        ? "Male"
+                        : "Female"
+                      : null}
                   </Text>
                 </Form.Item>
               </Col>

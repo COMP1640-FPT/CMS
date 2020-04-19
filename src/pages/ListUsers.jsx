@@ -1,15 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Typography, Table, Tag, Button, Input, Row, Col } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import agent from "../libs/agent";
 import CONSTANTS from "../constants";
 import { useHistory } from "react-router-dom";
+import Store from "../context";
 
 const { Title } = Typography;
 
 const ListUsers = () => {
+  const data = useContext(Store)
   const history = useHistory();
+  if(!data.user || !["admin", "staff"].includes(data.user.role)) {
+    history.push("/")
+  }
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [searchText, setSearchText] = useState("");

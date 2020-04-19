@@ -38,7 +38,7 @@ function App() {
   };
 
   useEffect(() => {
-    // if (!data.auth) return;
+    if (!data.auth) return;
 
     const getOwn = async () => {
       const result = await agent.get("/me");
@@ -58,7 +58,14 @@ function App() {
     };
   }, [data.auth]);
 
-  // if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
+  if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
+
+  if (!data.user)
+    return (
+      <div className="spinning-home">
+        <Spin spinning={true} />
+      </div>
+    );
 
   return (
     <Store.Provider value={data}>
@@ -123,7 +130,9 @@ function App() {
                   ) : (
                     <RequestTutor />
                   )
-                ) : <Spin spinning={true} />}
+                ) : (
+                  <Spin spinning={true} />
+                )}
               </MainLayout>
             )}
           />

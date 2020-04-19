@@ -34,7 +34,6 @@ const MainLayout = ({ children, bg }) => {
 
   return (
     <Layout id="components-layout-demo-custom-trigger">
-
       <Sider theme="dark" trigger={null} collapsible collapsed={collapsed}>
         <div className="logo" style={{ fontSize: collapsed ? "10px" : "20px" }}>
           e-Tutor
@@ -47,30 +46,43 @@ const MainLayout = ({ children, bg }) => {
             </Link>
           </Menu.Item>
 
-          <Menu.Item key="/users">
-            <Link to="/users">
-              <UserOutlined />
-              <span>List Users</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/users/create">
-            <Link to="/users/create">
-              <UserAddOutlined />
-              <span>Create Users</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/users/assign">
-            <Link to="/users/assign">
-              <MergeCellsOutlined />
-              <span>Assign Tutor</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/request">
-            <Link to="/request">
-              <WechatOutlined />
-              <span>Request</span>
-            </Link>
-          </Menu.Item>
+          {!data.user || !["admin", "staff"].includes(data.user.role) ? null : (
+            <Menu.Item key="/users">
+              <Link to="/users">
+                <UserOutlined />
+                <span>List Users</span>
+              </Link>
+            </Menu.Item>
+          )}
+
+          {!data.user || !["admin", "staff"].includes(data.user.role) ? null : (
+            <Menu.Item key="/users/create">
+              <Link to="/users/create">
+                <UserAddOutlined />
+                <span>Create Users</span>
+              </Link>
+            </Menu.Item>
+          )}
+
+          {!data.user || !["admin", "staff"].includes(data.user.role) ? null : (
+            <Menu.Item key="/users/assign">
+              <Link to="/users/assign">
+                <MergeCellsOutlined />
+                <span>Assign Tutor</span>
+              </Link>
+            </Menu.Item>
+          )}
+
+          {!data.user ||
+          !["tutor", "student"].includes(data.user.role) ? null : (
+            <Menu.Item key="/request">
+              <Link to="/request">
+                <WechatOutlined />
+                <span>Request</span>
+              </Link>
+            </Menu.Item>
+          )}
+
           <Divider />
           <Menu.Item
             key="99"
@@ -83,7 +95,7 @@ const MainLayout = ({ children, bg }) => {
           </Menu.Item>
         </Menu>
       </Sider>
-      
+
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>
           {React.createElement(

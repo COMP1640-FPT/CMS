@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Typography,
   Row,
@@ -14,6 +14,8 @@ import {
 } from "antd";
 import UploadAvatar from "../components/UploadAvatar";
 import agent from "../libs/agent";
+import Store from "../context";
+import { useHistory } from "react-router-dom";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -23,6 +25,12 @@ const layout = {
 };
 
 const CreateUser = () => {
+  const data = useContext(Store)
+  const history = useHistory()
+  if(!data.user || !["admin", "staff"].includes(data.user.role)) {
+    history.push("/")
+  }
+
   const [preCodeData, setPreCodeData] = useState([]);
   const [imageLink, setImageLink] = useState("");
   const [chooseRoleLoading, setChooseRoleLoading] = useState(false);
