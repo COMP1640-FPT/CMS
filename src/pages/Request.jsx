@@ -60,6 +60,7 @@ const Request = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [doneLoading, setDoneLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState(false);
+  const [uploadFileLoading, setUploadFileLoading] = useState(false);
   const [loadingSendMessage, setLoadingSendMessage] = useState(false);
   const [processingRequests, setProcessingRequests] = useState([]);
   const [doneRequests, setDoneRequests] = useState([]);
@@ -112,6 +113,7 @@ const Request = () => {
         {
           title: me.name || "",
           message,
+          avatar: result.data.results.sender_avatar,
         },
       ]);
       _sendMessageSocket(result.data.results);
@@ -169,7 +171,7 @@ const Request = () => {
           title: message.sender_name,
           message: message.content,
           file: message.file,
-          avatar: message.avatar,
+          avatar: message.sender_avatar,
         };
       });
       socket.emit("join room", { room: item.room });
@@ -210,6 +212,7 @@ const Request = () => {
   };
 
   const _customRequest = async (request) => {
+    setUploadFileLoading(true);
     const url = CONSTANTS.CORE.NODE_SERVER + "/requests/upload-file";
     const formData = new FormData();
     formData.append("file", request.file);
@@ -242,6 +245,8 @@ const Request = () => {
         setMessage("");
       }
     }
+
+    setUploadFileLoading(false);
   };
 
   useEffect(() => {
@@ -297,7 +302,7 @@ const Request = () => {
           title: data.sender_name || "",
           message: data.content,
           file: data.file,
-          avatar: data.avatar,
+          avatar: data.avatar || data.sender_avatar,
         },
       ]);
     });
@@ -307,18 +312,10 @@ const Request = () => {
     };
   }, [messages, socket]);
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      scroll.scrollToBottom({
-        duration: 0,
-        containerId: "chat-container",
-      });
-    }, 200);
-
-    return () => {
-      clearInterval(id);
-    };
-  }, []);
+  // scroll.scrollToBottom({
+  //   duration: 0,
+  //   containerId: "chat-container",
+  // });
 
   return (
     <Row
@@ -422,23 +419,37 @@ const Request = () => {
               loading={loadingMessage}
               itemLayout="horizontal"
               dataSource={messages}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={
-                      item.avatar ? (
-                        <Avatar src={item.avatar} />
-                      ) : (
-                        <Avatar icon={<UserOutlined />} />
-                      )
-                    }
-                    title={<a>{item.title}</a>}
-                    description={
-                      item.file ? _renderFile(item.file) : item.message
-                    }
-                  />
-                </List.Item>
-              )}
+              renderItem={(item) => {
+                console.log(item);
+                return (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={
+                        item.avatar ? (
+                          <Avatar
+                            src={CONSTANTS.CORE.AWS_S3 + "/" + item.avatar}
+                            onLoad={() => {
+                              setTimeout(() => {
+                                console.log("okiii");
+                                scroll.scrollToBottom({
+                                  duration: 0,
+                                  containerId: "chat-container",
+                                });
+                              }, 500);
+                            }}
+                          />
+                        ) : (
+                          <Avatar icon={<UserOutlined />} />
+                        )
+                      }
+                      title={<a>{item.title}</a>}
+                      description={
+                        item.file ? _renderFile(item.file) : item.message
+                      }
+                    />
+                  </List.Item>
+                );
+              }}
             />
 
             <br />
@@ -485,7 +496,7 @@ const Request = () => {
                     customRequest={_customRequest}
                     beforeUpload={beforeUpload}
                   >
-                    <Button block>
+                    <Button loading={uploadFileLoading} block>
                       <UploadOutlined /> File
                     </Button>
                   </Upload>

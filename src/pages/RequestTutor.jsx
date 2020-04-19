@@ -59,6 +59,8 @@ const RequestTutor = () => {
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [doneLoading, setDoneLoading] = useState(false);
+  const [uploadFileLoading, setUploadFileLoading] = useState(false);
+
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [loadingSendMessage, setLoadingSendMessage] = useState(false);
   const [processingRequests, setProcessingRequests] = useState([]);
@@ -113,6 +115,7 @@ const RequestTutor = () => {
         {
           title: me.name || "",
           message,
+          avatar: result.data.results.sender_avatar,
         },
       ]);
       _sendMessageSocket(result.data.results);
@@ -171,12 +174,20 @@ const RequestTutor = () => {
           title: message.sender_name,
           message: message.content,
           file: message.file,
-          avatar: message.avatar,
+          avatar: message.sender_avatar,
         };
       });
       socket.emit("join room", { room: item.room });
       setMessages(messages);
     }
+
+    // setTimeout(() => {
+    //   scroll.scrollToBottom({
+    //     duration: 0,
+    //     containerId: "chat-container",
+    //   });
+    // }, 100)
+
     setLoadingMessage(false);
   };
 
@@ -212,6 +223,7 @@ const RequestTutor = () => {
   };
 
   const _customRequest = async (request) => {
+    setUploadFileLoading(true);
     const url = CONSTANTS.CORE.NODE_SERVER + "/requests/upload-file";
     const formData = new FormData();
     formData.append("file", request.file);
@@ -244,6 +256,8 @@ const RequestTutor = () => {
         setMessage("");
       }
     }
+
+    setUploadFileLoading(false);
   };
 
   useEffect(() => {
@@ -293,7 +307,7 @@ const RequestTutor = () => {
           title: data.sender_name || "",
           message: data.content,
           file: data.file,
-          avatar: data.avatar,
+          avatar: data.sender_avatar,
         },
       ]);
     });
@@ -303,18 +317,10 @@ const RequestTutor = () => {
     };
   }, [messages, socket]);
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      scroll.scrollToBottom({
-        duration: 0,
-        containerId: "chat-container",
-      });
-    }, 200);
-
-    return () => {
-      clearInterval(id);
-    };
-  }, []);
+  // scroll.scrollToBottom({
+  //   duration: 0,
+  //   containerId: "chat-container",
+  // });
 
   return (
     <Row
@@ -383,30 +389,42 @@ const RequestTutor = () => {
               null
             }
           >
-            <List
-              id="chat-container"
-              loading={loadingMessage}
-              style={{ height: 500, overflow: "auto" }}
-              itemLayout="horizontal"
-              dataSource={messages}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={
-                      item.avatar ? (
-                        <Avatar src={item.avatar} />
-                      ) : (
-                        <Avatar icon={<UserOutlined />} />
-                      )
-                    }
-                    title={<a>{item.title}</a>}
-                    description={
-                      item.file ? _renderFile(item.file) : item.message
-                    }
-                  />
-                </List.Item>
-              )}
-            />
+            <div id="chat-container" style={{ height: 500, overflowY: "auto" }}>
+              <List
+                loading={loadingMessage}
+                style={{ height: "100%" }}
+                itemLayout="horizontal"
+                dataSource={messages}
+                renderItem={(item) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={
+                        item.avatar ? (
+                          <Avatar
+                            src={CONSTANTS.CORE.AWS_S3 + "/" + item.avatar}
+                            onLoad={() => {
+                              setTimeout(() => {
+                                console.log('okiii');
+                                scroll.scrollToBottom({
+                                  duration: 0,
+                                  containerId: "chat-container",
+                                });
+                              }, 500)
+                            }}
+                          />
+                        ) : (
+                          <Avatar icon={<UserOutlined />} />
+                        )
+                      }
+                      title={<a>{item.title}</a>}
+                      description={
+                        item.file ? _renderFile(item.file) : item.message
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
+            </div>
 
             <br />
             {currentRequest && currentRequest.status === "Not Resolve" ? (
@@ -452,7 +470,7 @@ const RequestTutor = () => {
                     customRequest={_customRequest}
                     beforeUpload={beforeUpload}
                   >
-                    <Button block>
+                    <Button loading={uploadFileLoading} block>
                       <UploadOutlined /> File
                     </Button>
                   </Upload>

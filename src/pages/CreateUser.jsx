@@ -62,6 +62,7 @@ const CreateUser = () => {
       const result = await agent.get("/handleRequest/code/" + role);
 
       if (result && result.data.success) {
+        console.log(result.data.results);
         setPreCodeData(result.data.results.preCode);
         form.setFieldsValue({
           code: result.data.results.code,
