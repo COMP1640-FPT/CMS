@@ -312,10 +312,12 @@ const Request = () => {
     };
   }, [messages, socket]);
 
-  // scroll.scrollToBottom({
-  //   duration: 0,
-  //   containerId: "chat-container",
-  // });
+  useEffect(() => {
+    scroll.scrollToBottom({
+      duration: 0,
+      containerId: "chat-container",
+    });
+  }, [messages]);
 
   return (
     <Row

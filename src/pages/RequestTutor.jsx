@@ -317,10 +317,12 @@ const RequestTutor = () => {
     };
   }, [messages, socket]);
 
-  // scroll.scrollToBottom({
-  //   duration: 0,
-  //   containerId: "chat-container",
-  // });
+  useEffect(() => {
+    scroll.scrollToBottom({
+      duration: 0,
+      containerId: "chat-container",
+    });
+  }, [messages]);
 
   return (
     <Row
@@ -404,12 +406,12 @@ const RequestTutor = () => {
                             src={CONSTANTS.CORE.AWS_S3 + "/" + item.avatar}
                             onLoad={() => {
                               setTimeout(() => {
-                                console.log('okiii');
+                                console.log("okiii");
                                 scroll.scrollToBottom({
                                   duration: 0,
                                   containerId: "chat-container",
                                 });
-                              }, 500)
+                              }, 500);
                             }}
                           />
                         ) : (
