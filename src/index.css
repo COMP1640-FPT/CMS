@@ -72,3 +72,12 @@ code {
 .list-hover:hover strong {
   color: #1890ff !important;
 }
+
+.text-form {
+  height: 500px;
+  overflow: auto;
+}
+
+.ant-list-item-meta-description {
+  white-space: pre-line;
+}

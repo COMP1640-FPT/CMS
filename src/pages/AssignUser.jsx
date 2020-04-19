@@ -12,6 +12,7 @@ import {
 import CustomTableTranfer from "../components/CustomTableTranfer";
 import { useEffect } from "react";
 import agent from "../libs/agent";
+import { isObject } from 'lodash'
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -46,30 +47,42 @@ const AssignUser = () => {
   const [assignedStudents, setAssignedStudents] = useState([]);
   const [unassignedStudents, setUnassignedStudents] = useState([]);
   const [tutors, setTutors] = useState([]);
-  const [students, setStudents] = useState([]);
 
   const onChange = async (value) => {
     setCurrentTutor(value);
     setLoadingTable(true);
-    const result = await agent.get("/tutor/" + value);
-    if (result && result.data.success) {
-      setAssignedStudents(result.data.results.map((el) => el.id.toString()));
+
+    const [resultTutor, resultUnassignedStudents] = await Promise.all([
+      agent.get("/tutor/" + value),
+      agent.get("/student-not-assign"),
+    ]);
+
+    if (resultTutor && resultTutor.data.success) {
+      setAssignedStudents(resultTutor.data.results);
     }
+
+    if (resultUnassignedStudents && resultUnassignedStudents.data.success) {
+      setUnassignedStudents(resultUnassignedStudents.data.results);
+    }
+
     setLoadingTable(false);
   };
 
   const _handlAssign = async () => {
-    setAssignLoading(true)
+    setAssignLoading(true);
     const result = await agent.post("/assign/", {
       tutor: currentTutor,
-      student: assignedStudents,
+      student: assignedStudents.map(el => {
+        if(isObject(el)) return el.id
+        return el
+      }),
     });
     if (result && result.data.success) {
       notification.success({
         message: "Assgin students sucessfully!",
       });
     }
-    setAssignLoading(false)
+    setAssignLoading(false);
   };
 
   function onBlur() {
@@ -84,28 +97,43 @@ const AssignUser = () => {
     console.log("search:", val);
   }
 
-  const onChangeTranfer = (nextTargetKeys) => {
-    
-    console.log(nextTargetKeys);
-    setAssignedStudents(nextTargetKeys);
+  const onChangeTranfer = (nextTargetKeys, direction, moveKeys) => {
+    if (direction === "left") {
+      const targets = assignedStudents.filter((el) => {
+        if (moveKeys.includes(el.id.toString())) return true;
+        return false;
+      });
+
+      setUnassignedStudents([...unassignedStudents, ...targets]);
+      setAssignedStudents(
+        assignedStudents.filter((el) => !moveKeys.includes(el.id.toString()))
+      );
+    }
+
+    if (direction === "right") {
+      const targets = unassignedStudents.filter((el) => {
+        if (moveKeys.includes(el.id.toString())) return true;
+        return false;
+      });
+
+      setAssignedStudents([
+        ...assignedStudents,
+        ...targets
+      ]);
+      setUnassignedStudents(unassignedStudents.filter((el) => !moveKeys.includes(el.id.toString())));
+    }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setLoadingTable(true);
-      const [resultTutor, resultStudent] = await Promise.all([
-        agent.get("/handleRequest/users/tutor"),
-        agent.get("/handleRequest/users/student"),
-      ]);
+      const resultTutor = await agent.get("/handleRequest/users/tutor");
 
       if (resultTutor && resultTutor.data.success) {
         setTutors(resultTutor.data.results);
       }
 
-      if (resultStudent && resultStudent.data.success) {
-        setStudents(resultStudent.data.results);
-      }
       setLoading(false);
       setLoadingTable(false);
     };
@@ -115,6 +143,7 @@ const AssignUser = () => {
 
   const processData = (data) =>
     data.map((student) => {
+      console.log(student);
       return {
         key: student.id.toString(),
         code: student.code,
@@ -158,31 +187,41 @@ const AssignUser = () => {
       </Row>
       <br />
       <br />
-      <Row gutter={[0, 8]}>
-        <Col xs={{ span: 24, offset: 0 }} lg={{ span: 18, offset: 4 }}>
-          <CustomTableTranfer
-            loadingTable={loadingTable}
-            titles={['Students', "Tutor's Students"]}
-            style={{ width: "100%" }}
-            dataSource={processData(students)}
-            targetKeys={assignedStudents}
-            showSearch={true}
-            onChange={onChangeTranfer}
-            filterOption={(inputValue, item) =>
-              item.code.indexOf(inputValue) !== -1 ||
-              item.name.indexOf(inputValue) !== -1
-            }
-            leftColumns={leftTableColumns}
-            rightColumns={rightTableColumns}
-          />
-        </Col>
+      {currentTutor ? (
+        <Row gutter={[0, 8]}>
+          <Col xs={{ span: 24, offset: 0 }} lg={{ span: 18, offset: 4 }}>
+            <CustomTableTranfer
+              loadingTable={loadingTable}
+              titles={["Unssigned Students", "Tutor's Students"]}
+              style={{ width: "100%" }}
+              dataSource={processData([
+                ...unassignedStudents,
+                ...assignedStudents,
+              ])}
+              targetKeys={assignedStudents.map((el) => el.id.toString())}
+              showSearch={true}
+              onChange={onChangeTranfer}
+              filterOption={(inputValue, item) =>
+                item.code.indexOf(inputValue) !== -1 ||
+                item.name.indexOf(inputValue) !== -1
+              }
+              leftColumns={leftTableColumns}
+              rightColumns={rightTableColumns}
+            />
+          </Col>
 
-        <Col align="center" xs={{ span: 24, offset: 0 }}>
-          <Button disabled={!currentTutor} loading={assignLoading} type="primary" onClick={_handlAssign}>
-            Assign
-          </Button>
-        </Col>
-      </Row>
+          <Col align="center" xs={{ span: 24, offset: 0 }}>
+            <Button
+              disabled={!currentTutor}
+              loading={assignLoading}
+              type="primary"
+              onClick={_handlAssign}
+            >
+              Assign
+            </Button>
+          </Col>
+        </Row>
+      ) : null}
     </div>
   );
 };

@@ -13,6 +13,9 @@ import Login from "./pages/Login";
 import Store from "./context";
 import store from "store";
 import Request from "./pages/Request";
+import agent from "./libs/agent";
+import { Spin } from "antd";
+import RequestTutor from "./pages/RequestTutor";
 
 function App() {
   const [data, setData] = useState({
@@ -35,12 +38,27 @@ function App() {
   };
 
   useEffect(() => {
+    // if (!data.auth) return;
+
+    const getOwn = async () => {
+      const result = await agent.get("/me");
+
+      if (result && result.data.success) {
+        setData({
+          ...data,
+          user: result.data.results,
+        });
+      }
+    };
+
+    getOwn();
+
     return () => {
       // alert("hello")
     };
-  }, []);
+  }, [data.auth]);
 
-  if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
+  // if (!data.auth) return <Login onSuccess={_handleLoginSuccess} />;
 
   return (
     <Store.Provider value={data}>
@@ -99,7 +117,13 @@ function App() {
             path="/request"
             render={() => (
               <MainLayout bg="transparent">
-                <Request />
+                {data.user ? (
+                  data.user.role === "student" ? (
+                    <Request />
+                  ) : (
+                    <RequestTutor />
+                  )
+                ) : <Spin spinning={true} />}
               </MainLayout>
             )}
           />

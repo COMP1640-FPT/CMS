@@ -47,7 +47,7 @@ const layout = {
   wrapperCol: { span: 18 },
 };
 
-const Request = () => {
+const RequestTutor = () => {
   const [socket, setSocket] = useState(null);
   const [me, setMe] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -99,6 +99,7 @@ const Request = () => {
 
   const _handleSendMessage = async () => {
     setLoadingSendMessage(true);
+
     const result = await agent.post("/store-message", {
       request_id: currentRequest.id,
       sender_id: me.id,
@@ -115,6 +116,7 @@ const Request = () => {
         },
       ]);
       _sendMessageSocket(result.data.results);
+
       setMessage("");
     }
     setLoadingSendMessage(false);
@@ -256,14 +258,9 @@ const Request = () => {
 
       setMe(ownInfo.data.results);
 
-      const [tutorInfo, requestRes] = await Promise.all([
-        agent.get("/student/" + ownInfo.data.results.id),
-        agent.get("/student-requests/" + ownInfo.data.results.id),
+      const [requestRes] = await Promise.all([
+        agent.get("/tutor-requests/" + ownInfo.data.results.id),
       ]);
-
-      if (tutorInfo && tutorInfo.data.success) {
-        setTutor(tutorInfo.data.results);
-      }
 
       if (requestRes && requestRes.data.success) {
         const data = requestRes.data.results;
@@ -283,7 +280,6 @@ const Request = () => {
     fetchTutorInfo();
 
     return () => {
-      socket.removeAllListeners();
       socket.disconnect();
     };
   }, []);
@@ -334,10 +330,10 @@ const Request = () => {
           style={{ margin: "13px" }}
         >
           <TabPane tab="Requests" key="1">
-            <Button type="primary" block onClick={showModal}>
+            {/* <Button type="primary" block onClick={showModal}>
               Create Request
-            </Button>
-            <Divider orientation="left">Processing</Divider>
+            </Button> */}
+            <Divider orientation="left">Processingg</Divider>
             <List
               style={{ maxHeight: 300, overflow: "auto" }}
               dataSource={processingRequests}
@@ -366,36 +362,6 @@ const Request = () => {
               )}
             />
           </TabPane>
-          <TabPane tab="Tutor Information" key="2">
-            <Spin spinning={tutorInfoLoading}>
-              <Row>
-                <Col span={24} align="center">
-                  {tutor && tutor.avatar ? (
-                    <Avatar
-                      size={200}
-                      src={CONSTANTS.CORE.AWS_S3 + "/" + tutor.avatar}
-                    />
-                  ) : (
-                    <Avatar size={200} icon={<UserOutlined />} />
-                  )}
-                </Col>
-              </Row>
-              <br />
-              <Row>
-                <Col xs={{ span: 24 }}>
-                  <Typography.Title level={4}>Code</Typography.Title>
-                </Col>
-                <Col xs={{ span: 24 }}>{tutor && tutor.code}</Col>
-              </Row>
-              <br />
-              <Row>
-                <Col xs={{ span: 24 }}>
-                  <Typography.Title level={4}>Name</Typography.Title>
-                </Col>
-                <Col xs={{ span: 24 }}>{tutor && tutor.name}</Col>
-              </Row>
-            </Spin>
-          </TabPane>
         </Tabs>
       </Col>
 
@@ -405,21 +371,22 @@ const Request = () => {
             title={currentRequest.title}
             bordered={false}
             extra={
-              currentRequest.status === "Not Resolve" ? (
-                <Button
-                  loading={doneLoading}
-                  onClick={() => _handleDoneRequest(currentRequest.id)}
-                  type="primary"
-                >
-                  Done
-                </Button>
-              ) : null
+              // currentRequest.status === "Not Resolve" ? (
+              //   <Button
+              //     loading={doneLoading}
+              //     onClick={() => _handleDoneRequest(currentRequest.id)}
+              //     type="primary"
+              //   >
+              //     Done
+              //   </Button>
+              // ) :
+              null
             }
           >
             <List
               id="chat-container"
-              style={{ height: 500, overflow: "auto" }}
               loading={loadingMessage}
+              style={{ height: 500, overflow: "auto" }}
               itemLayout="horizontal"
               dataSource={messages}
               renderItem={(item) => (
@@ -495,52 +462,8 @@ const Request = () => {
           </Card>
         </Col>
       ) : null}
-
-      <Modal
-        title="Create Request Form"
-        visible={visible}
-        onOk={() => form.submit()}
-        okText={"Create Request"}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      >
-        <Form
-          {...layout}
-          form={form}
-          initialValues={{
-            type: "message",
-          }}
-          name="request-form"
-          onFinish={onFinish}
-        >
-          <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-            <Select
-              placeholder="Choose tyepe *"
-              // onChange={_handleChangeRole}
-              // loading={chooseRoleLoading}
-            >
-              <Option value="message">Message</Option>
-              <Option value="meeting">Meeting</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: "Title is required" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name={"description"}
-            label="Description"
-            rules={[{ required: "Description is required" }]}
-          >
-            <Input.TextArea />
-          </Form.Item>
-        </Form>
-      </Modal>
     </Row>
   );
 };
 
-export default Request;
+export default RequestTutor;
