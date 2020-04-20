@@ -17,7 +17,7 @@ const layout = {
 const UserInfo = () => {
   const dataContext = useContext(Store);
   const history = useHistory();
-  if (!data.user || !["admin", "staff"].includes(data.user.role)) {
+  if (!dataContext.user || !["admin", "staff"].includes(dataContext.user.role)) {
     history.push("/");
   }
   const { id } = useParams();
