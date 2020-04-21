@@ -1,10 +1,13 @@
 import React, { useContext } from "react";
 import Store from "../context";
+import AdminDashboard from "./AdminDashboard";
 
 const Dashboard = () => {
-  const data = useContext(Store)
-  console.log(data);
-  return <div>Dashboard</div>;
+  const data = useContext(Store);
+
+  return (
+    <div>{["admin"].includes(data.user.role) ? <AdminDashboard /> : <h1>hello</h1>}</div>
+  );
 };
 
 export default Dashboard;

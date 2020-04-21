@@ -75,7 +75,7 @@ function App() {
             exact
             path="/"
             render={() => (
-              <MainLayout>
+              <MainLayout bg="transparent">
                 <Dashboard />
               </MainLayout>
             )}
