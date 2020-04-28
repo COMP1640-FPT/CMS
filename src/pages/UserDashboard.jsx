@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Row, Typography, Spin, Table } from "antd";
+import { Card, Col, Row, Typography, Spin } from "antd";
 import {
   BarChart,
   Bar,
@@ -14,30 +14,12 @@ import agent from "../libs/agent";
 
 const { Title } = Typography;
 
-const AdminDashboard = () => {
+const UserDashboard = ({ id, role }) => {
   const [data, setData] = useState();
-
-  const columns = [
-    {
-      title: "Tutor",
-      dataIndex: "tutor",
-      key: "tutor",
-    },
-    {
-      title: "Number of student",
-      dataIndex: "numberOfStudent",
-      key: "numberOfStudent",
-    },
-    {
-      title: "Rate",
-      dataIndex: "rates",
-      key: "rates",
-    },
-  ]
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await agent.get("/staff-dashboard");
+      const result = await agent.get(`${role === "tutor" ? "/tutor-dashboard/" : "/student-dashboard/"}${id}`);
 
       if (result && result.data.success) {
         console.log(result);
@@ -117,22 +99,8 @@ const AdminDashboard = () => {
           </ResponsiveContainer>
         </Col>
       </Row>
-
-      <Row gutter={16}>
-        <Col xs={{ span: 24 }}>
-          <Title>Tutor Ranking</Title>
-        </Col>
-
-        <Col xs={{ span: 24 }}>
-          <Table
-            loading={!data}
-            columns={columns}
-            dataSource={data ? data.tutorRanking : []}
-          />
-        </Col>
-      </Row>
     </>
   );
 };
 
-export default AdminDashboard;
+export default UserDashboard;
