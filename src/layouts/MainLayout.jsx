@@ -46,6 +46,15 @@ const MainLayout = ({ children, bg }) => {
             </Link>
           </Menu.Item>
 
+          {!data.user || !["admin"].includes(data.user.role) ? null : (
+            <Menu.Item key="/report">
+              <Link to="/report">
+                <UserOutlined />
+                <span>Create Report</span>
+              </Link>
+            </Menu.Item>
+          )}
+
           {!data.user || !["admin", "staff"].includes(data.user.role) ? null : (
             <Menu.Item key="/users">
               <Link to="/users">

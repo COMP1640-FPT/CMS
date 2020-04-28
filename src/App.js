@@ -16,6 +16,7 @@ import Request from "./pages/Request";
 import agent from "./libs/agent";
 import { Spin } from "antd";
 import RequestTutor from "./pages/RequestTutor";
+import Report from "./pages/Report";
 
 function App() {
   const [data, setData] = useState({
@@ -77,6 +78,15 @@ function App() {
             render={() => (
               <MainLayout bg="transparent">
                 <Dashboard />
+              </MainLayout>
+            )}
+          />
+          <Route
+            exact
+            path="/report"
+            render={() => (
+              <MainLayout bg="transparent">
+                <Report />
               </MainLayout>
             )}
           />
