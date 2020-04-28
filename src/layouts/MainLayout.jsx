@@ -64,7 +64,7 @@ const MainLayout = ({ children, bg }) => {
             </Menu.Item>
           )}
 
-          {!data.user || !["admin", "staff"].includes(data.user.role) ? null : (
+          {!data.user || !["staff"].includes(data.user.role) ? null : (
             <Menu.Item key="/users/assign">
               <Link to="/users/assign">
                 <MergeCellsOutlined />

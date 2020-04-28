@@ -6,7 +6,7 @@ const Dashboard = () => {
   const data = useContext(Store);
 
   return (
-    <div>{["admin"].includes(data.user.role) ? <AdminDashboard /> : <h1>hello</h1>}</div>
+    <div>{["admin"].includes(data.user.role) ? <AdminDashboard /> : null}</div>
   );
 };
 

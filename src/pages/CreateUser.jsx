@@ -113,9 +113,9 @@ const CreateUser = () => {
                     onChange={_handleChangeRole}
                     loading={chooseRoleLoading}
                   >
-                    <Option value="staff">Staff</Option>
-                    <Option value="tutor">Tutor</Option>
-                    <Option value="student">Student</Option>
+                    <Option value="staff" disabled={data.user.role === "staff"}>Staff</Option>
+                    <Option value="tutor" disabled={data.user.role === "admin"}>Tutor</Option>
+                    <Option value="student" disabled={data.user.role === "admin"}>Student</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -156,7 +156,7 @@ const CreateUser = () => {
                 <Form.Item
                   name="firstName"
                   rules={[
-                    { required: true, message: "Please input first name!" },
+                    { required: true, whitespace: true, message: "Please input first name!" },
                   ]}
                 >
                   <Input
@@ -170,7 +170,7 @@ const CreateUser = () => {
                 <Form.Item
                   name="lastName"
                   rules={[
-                    { required: true, message: "Please input last name!" },
+                    { required: true, whitespace: true, message: "Please input last name!" },
                   ]}
                 >
                   <Input
@@ -198,7 +198,7 @@ const CreateUser = () => {
               <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                 <Form.Item
                   name="country"
-                  rules={[{ required: true, message: "Please input country!" }]}
+                  rules={[{ required: true, whitespace: true, message: "Please input country!" }]}
                 >
                   <Input
                     // prefix={<UserOutlined className="site-form-item-icon" />}
@@ -213,7 +213,7 @@ const CreateUser = () => {
                 <Form.Item
                   name="birthday"
                   rules={[
-                    { required: true, message: "Please input birthday!" },
+                    { required: true, whitespace: true, message: "Please input birthday!" },
                   ]}
                 >
                   <DatePicker
@@ -240,7 +240,7 @@ const CreateUser = () => {
               <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                 <Form.Item
                   name="address"
-                  rules={[{ required: true, message: "Please input address!" }]}
+                  rules={[{ required: true, whitespace: true, message: "Please input address!" }]}
                 >
                   <Input.TextArea placeholder="Address" rows={8} />
                 </Form.Item>

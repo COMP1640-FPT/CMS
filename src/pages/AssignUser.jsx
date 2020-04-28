@@ -76,6 +76,13 @@ const AssignUser = () => {
   };
 
   const _handlAssign = async () => {
+    if(assignedStudents.length > 10) {
+      notification.error({
+        message: "Student is not more than 10"
+      })
+      setAssignLoading(false);
+      return
+    }
     setAssignLoading(true);
     const result = await agent.post("/assign/", {
       tutor: currentTutor,

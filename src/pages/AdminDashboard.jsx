@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Typography } from "antd";
 import {
   BarChart,
@@ -10,8 +10,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import agent from "../libs/agent";
 
-const { Title } = Typography
+const { Title } = Typography;
 
 const data = [
   { name: "Page A", resolved: 4000, processing: 2400 },
@@ -23,6 +24,19 @@ const data = [
   { name: "Page G", resolved: 3490, processing: 4300 },
 ];
 const AdminDashboard = () => {
+  const [data2, setData] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await agent.get("/staff-dashboard");
+
+      if (result && result.data.success) {
+        console.log(result);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <Row gutter={16}>

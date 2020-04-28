@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Checkbox, Row, Col } from "antd";
+import { Form, Input, Button, Checkbox, Row, Col, notification, Typography } from "antd";
 import background from "../assets/bg.jpg";
 import agent from "../libs/agent";
+
+const { Title } = Typography
 
 const layout = {
   labelCol: {
@@ -22,11 +24,18 @@ const Login = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const onFinish = async (values) => {
     setLoading(true);
-    const result = await agent.post("/login", values);
+    try {
+      const result = await agent.post("/login", values);
 
-    if (result && result.data) {
-      return onSuccess(result.data);
+      if (result && result.data) {
+        return onSuccess(result.data);
+      }
+    } catch (err) {
+      notification.error({
+        message: err.response.data.error,
+      });
     }
+
     setLoading(false);
   };
 
@@ -42,9 +51,11 @@ const Login = ({ onSuccess }) => {
         backgroundSize: "cover",
       }}
       type="flex"
-      align="middle"
     >
-      <Col xs={{ span: 24, offset: 0 }} lg={{ span: 6, offset: 9 }}>
+      <Col xs={{ span: 14, offset: 5 }} align="middle">
+        <Title style={{ transform: "translateY(200px)", fontSize: 50 }}>E-Tutor</Title>
+      </Col>
+      <Col xs={{ span: 14, offset: 5 }} lg={{ span: 6, offset: 9 }}>
         <Form
           {...layout}
           name="basic"
