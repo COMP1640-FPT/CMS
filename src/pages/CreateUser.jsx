@@ -213,7 +213,7 @@ const CreateUser = () => {
                 <Form.Item
                   name="birthday"
                   rules={[
-                    { required: true, whitespace: true, message: "Please input birthday!" },
+                    { required: true, message: "Please input birthday!" },
                   ]}
                 >
                   <DatePicker
