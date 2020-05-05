@@ -50,10 +50,10 @@ const layout = {
 };
 
 const RequestTutor = () => {
-  const data = useContext(Store)
+  const data = useContext(Store);
   const history = useHistory();
-  if(!data.user || !["tutor"].includes(data.user.role)) {
-    history.push("/")
+  if (!data.user || !["tutor"].includes(data.user.role)) {
+    history.push("/");
   }
   const [socket, setSocket] = useState(null);
   const [me, setMe] = useState(null);
@@ -386,16 +386,18 @@ const RequestTutor = () => {
             title={currentRequest.title}
             bordered={false}
             extra={
-              // currentRequest.status === "Not Resolve" ? (
-              //   <Button
-              //     loading={doneLoading}
-              //     onClick={() => _handleDoneRequest(currentRequest.id)}
-              //     type="primary"
-              //   >
-              //     Done
-              //   </Button>
-              // ) :
-              null
+              currentRequest.type === "meeting" ? (
+                <>
+                  &nbsp;
+                  <Button
+                    target="_blank"
+                    type="secondary"
+                    href={"http://localhost:8008/" + data.user.role}
+                  >
+                    Meeting
+                  </Button>
+                </>
+              ) : null
             }
           >
             <div id="chat-container" style={{ height: 500, overflowY: "auto" }}>

@@ -50,10 +50,10 @@ const layout = {
 };
 
 const Request = () => {
-  const data = useContext(Store)
+  const data = useContext(Store);
   const history = useHistory();
-  if(!data.user || !["student"].includes(data.user.role)) {
-    history.push("/")
+  if (!data.user || !["student"].includes(data.user.role)) {
+    history.push("/");
   }
   const [socket, setSocket] = useState(null);
   const [me, setMe] = useState(null);
@@ -411,15 +411,29 @@ const Request = () => {
             title={currentRequest.title}
             bordered={false}
             extra={
-              currentRequest.status === "Not Resolve" ? (
-                <Button
-                  loading={doneLoading}
-                  onClick={() => _handleDoneRequest(currentRequest.id)}
-                  type="primary"
-                >
-                  Done
-                </Button>
-              ) : null
+              <>
+                {currentRequest.status === "Not Resolve" ? (
+                  <Button
+                    loading={doneLoading}
+                    onClick={() => _handleDoneRequest(currentRequest.id)}
+                    type="primary"
+                  >
+                    Done
+                  </Button>
+                ) : null}
+                {currentRequest.type === "meeting" ? (
+                  <>
+                    &nbsp;
+                    <Button
+                      target="_blank"
+                      type="secondary"
+                      href={"http://localhost:8008/" + data.user.role}
+                    >
+                      Meeting
+                    </Button>
+                  </>
+                ) : null}
+              </>
             }
           >
             <List
