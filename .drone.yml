@@ -27,7 +27,7 @@ steps:
       username: ubuntu
       password:
         from_secret: server_password
-      target: /home/e-tutor/${DRONE_REPO_NAME}
+      target: ~/e-tutor/${DRONE_REPO_NAME}
       source:
         - docker-compose.yml
         - docker-compose.prod.yml
@@ -44,7 +44,7 @@ steps:
       password:
         from_secret: server_password
       script:
-        - cd /home/e-tutor/${DRONE_REPO_NAME}
+        - cd ~/e-tutor/${DRONE_REPO_NAME}
         - docker-compose down
         - docker rmi -f tungduy/cms-etutor
         - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
