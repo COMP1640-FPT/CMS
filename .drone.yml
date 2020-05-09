@@ -24,9 +24,9 @@ steps:
     settings:
       host: drone.e-tutor.wtf
       port: 22
-      username: fbeta
-      key:
-        from_secret: serv_ssh_key
+      username: ubuntu
+      password:
+        from_secret: server_password
       target: /home/e-tutor/${DRONE_REPO_NAME}
       source:
         - docker-compose.yml
@@ -40,9 +40,9 @@ steps:
       host: drone.e-tutor.wtf
       port: 22
       command_timeout: 6m
-      username: fbeta
-      key:
-        from_secret: serv_ssh_key
+      username: ubuntu
+      password:
+        from_secret: server_password
       script:
         - cd /home/e-tutor/${DRONE_REPO_NAME}
         - docker-compose down
